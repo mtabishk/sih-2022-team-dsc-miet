@@ -46,7 +46,15 @@ class IntroductionScreen extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: _height / 9,
+          left: _width / 2 - _width * 0.15,
+          child: Image.asset(
+            'assets/icons/NPIC-logo.png',
+            height: _height * 0.3,
+            width: _width * 0.3,
+          ),
+        ),
+        Positioned(
+          top: _height / 6,
           left: _width / 8,
           right: _width / 8,
           child: Column(
@@ -55,8 +63,7 @@ class IntroductionScreen extends StatelessWidget {
               SizedBox(
                   height: _height * 0.5,
                   width: _height * 0.5,
-                  child: Image.asset('assets/icons/onboarding-logo.png')),
-              SizedBox(height: 32.0),
+                  child: Image.asset('assets/icons/kiran-logo-large.png')),
               Text(
                 "KIRAN",
                 style: TextStyle(
