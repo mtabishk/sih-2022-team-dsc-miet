@@ -1,3 +1,6 @@
+import 'dart:collection';
+import 'dart:typed_data';
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +18,11 @@ class VideoScreeningPage extends StatefulWidget {
 }
 
 class _VideoScreeningPageState extends State<VideoScreeningPage> {
-  late CameraController controller;
-
+  late CameraController _cameraController;
   late stt.SpeechToText _speech;
+
+  CameraImage? _cameraImage;
+
   bool _isListening = false;
   String _text = "Press the button and start speaking ";
   double _confidence = 1.0;
@@ -26,18 +31,12 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
-    controller = CameraController(cameras![1], ResolutionPreset.max);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
+    this._loadCamera();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _cameraController.dispose();
     super.dispose();
   }
 
@@ -62,6 +61,25 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
       setState(() => _isListening = false);
       _speech.stop();
     }
+  }
+
+  Future<void> _loadCamera() async {
+    _cameraController = CameraController(cameras![1], ResolutionPreset.low);
+    _cameraController.initialize().then((value) {
+      if (!mounted) {
+        return;
+      } else {
+        setState(() {
+          _cameraController.startImageStream((image) {
+            _cameraImage = image;
+            // call the api
+            // cameraImage!.planes.map((plane) {
+            // return plane.bytes
+            // }).toList();
+          });
+        });
+      }
+    });
   }
 
   @override
@@ -105,15 +123,15 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(8.0)),
                       child: Builder(builder: (context) {
-                        if (!controller.value.isInitialized) {
+                        if (!_cameraController.value.isInitialized) {
                           return Container();
                         }
                         return SizedBox(
-                          height: size.width * 0.8,
-                          width: size.width * 0.45,
+                          height: size.width * 0.7,
+                          width: size.width * 0.4,
                           child: AspectRatio(
-                              aspectRatio: controller.value.aspectRatio,
-                              child: CameraPreview(controller)),
+                              aspectRatio: _cameraController.value.aspectRatio,
+                              child: CameraPreview(_cameraController)),
                         );
                       }),
                     ),

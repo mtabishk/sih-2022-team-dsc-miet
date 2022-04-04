@@ -64,14 +64,6 @@ class IntroductionScreen extends StatelessWidget {
                   height: _height * 0.5,
                   width: _height * 0.5,
                   child: Image.asset('assets/icons/kiran-logo-large.png')),
-              Text(
-                "KIRAN",
-                style: TextStyle(
-                  fontSize: 28.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF0ACDCF),
-                ),
-              ),
               SizedBox(height: 16.0),
               Text(
                 "An app for screening the possible Mental health issues in adolescents and PwDs.",
