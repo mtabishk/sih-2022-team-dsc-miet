@@ -9,6 +9,7 @@ import 'package:kiran_user_app/main.dart';
 import 'package:rive/rive.dart';
 
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:tflite/tflite.dart';
 
 class VideoScreeningPage extends StatefulWidget {
   const VideoScreeningPage({Key? key}) : super(key: key);
@@ -22,6 +23,8 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
   late stt.SpeechToText _speech;
 
   CameraImage? _cameraImage;
+  String _predictionText = '';
+  double _predictionConfidence = 0.0;
 
   bool _isListening = false;
   String _text = "Press the button and start speaking ";
@@ -31,7 +34,8 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
-    this._loadCamera();
+    this._loadModel();
+    this._loadCameraStream();
   }
 
   @override
@@ -63,23 +67,56 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
     }
   }
 
-  Future<void> _loadCamera() async {
+  Future<void> _loadCameraStream() async {
     _cameraController = CameraController(cameras![1], ResolutionPreset.low);
     _cameraController.initialize().then((value) {
       if (!mounted) {
         return;
       } else {
-        setState(() {
-          _cameraController.startImageStream((image) {
-            _cameraImage = image;
-            // call the api
-            // cameraImage!.planes.map((plane) {
-            // return plane.bytes
-            // }).toList();
+        if (this.mounted) {
+          setState(() {
+            _cameraController.startImageStream((image) {
+              _cameraImage = image;
+              // call the api or run tflite model
+              _runEmotionDetectionModel();
+            });
           });
-        });
+        }
       }
     });
+  }
+
+  Future<void> _loadModel() async {
+    await Tflite.loadModel(
+      model: "assets/models/emotion_detection_model.tflite",
+      labels: "assets/models/labels.txt",
+    );
+  }
+
+  Future<void> _runEmotionDetectionModel() async {
+    if (_cameraImage == null) {
+      return;
+    }
+    try {
+      var predictions = await Tflite.runModelOnFrame(
+        bytesList: _cameraImage!.planes.map((plane) {
+          return plane.bytes;
+        }).toList(),
+        numResults: 1,
+        imageHeight: _cameraImage!.height,
+        imageWidth: _cameraImage!.width,
+      );
+      predictions!.forEach((element) {
+        if (this.mounted) {
+          setState(() {
+            _predictionText = element['label'];
+            _predictionConfidence = element['confidence'];
+          });
+        }
+      });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
@@ -106,6 +143,25 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
                           Icons.close,
                         )),
                   ),
+                  Positioned(
+                      bottom: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Result: $_predictionText",
+                              style: TextStyle(fontSize: 18.0),
+                            ),
+                            Text(
+                              "Confidence: $_predictionConfidence",
+                              style: TextStyle(fontSize: 18.0),
+                            ),
+                          ],
+                        ),
+                      )),
                 ],
               ),
             ),
