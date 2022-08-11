@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kiran_user_app/app/bottom_navigation_page.dart';
 import 'package:kiran_user_app/app/home/home_page.dart';
+import 'package:kiran_user_app/app/screening/choose_character_page.dart';
 import 'package:kiran_user_app/app/screening/screening_page.dart';
 
 class SignInPage extends StatelessWidget {
@@ -63,7 +64,7 @@ class SignInPage extends StatelessWidget {
                   onPressed: () => Navigator.push(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) => ScreeningPage(),
+                        builder: (context) => ChooseCharacterPage(),
                       )),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

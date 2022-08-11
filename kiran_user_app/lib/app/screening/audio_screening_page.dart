@@ -5,7 +5,9 @@ import 'package:rive/rive.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class AudioScreeningPage extends StatefulWidget {
-  const AudioScreeningPage({Key? key}) : super(key: key);
+  const AudioScreeningPage({Key? key, required this.animationCharacter})
+      : super(key: key);
+  final String animationCharacter;
 
   @override
   State<AudioScreeningPage> createState() => _AudioScreeningPageState();
@@ -59,8 +61,7 @@ class _AudioScreeningPageState extends State<AudioScreeningPage> {
               child: Stack(
                 children: [
                   Positioned.fill(
-                      child: RiveAnimation.asset(
-                          'assets/animations/flutter-puzzle.riv')),
+                      child: RiveAnimation.asset(widget.animationCharacter)),
                   Positioned(
                     left: 8.0,
                     child: IconButton(

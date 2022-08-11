@@ -12,7 +12,9 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:tflite/tflite.dart';
 
 class VideoScreeningPage extends StatefulWidget {
-  const VideoScreeningPage({Key? key}) : super(key: key);
+  const VideoScreeningPage({Key? key, required this.animationCharacter})
+      : super(key: key);
+  final String animationCharacter;
 
   @override
   State<VideoScreeningPage> createState() => _VideoScreeningPageState();
@@ -133,8 +135,7 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
               child: Stack(
                 children: [
                   Positioned.fill(
-                      child: RiveAnimation.asset(
-                          'assets/animations/flutter-puzzle.riv')),
+                      child: RiveAnimation.asset(widget.animationCharacter)),
                   Positioned(
                     left: 8.0,
                     child: IconButton(

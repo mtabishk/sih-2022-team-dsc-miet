@@ -8,7 +8,9 @@ import 'package:kiran_user_app/app/screening/video_screening_page.dart';
 import 'package:rive/rive.dart';
 
 class ScreeningPage extends StatelessWidget {
-  const ScreeningPage({Key? key}) : super(key: key);
+  const ScreeningPage({Key? key, required this.animationCharacter})
+      : super(key: key);
+  final String animationCharacter;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +26,7 @@ class ScreeningPage extends StatelessWidget {
               child: Stack(
                 children: [
                   Positioned.fill(
-                      child:
-                          RiveAnimation.asset('assets/animations/3d_face.riv')),
+                      child: RiveAnimation.asset(animationCharacter)),
                 ],
               ),
             ),
@@ -51,7 +52,10 @@ class ScreeningPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => VideoScreeningPage()),
+                                    builder: (context) => VideoScreeningPage(
+                                          animationCharacter:
+                                              animationCharacter,
+                                        )),
                               );
                             },
                             child: ImageIcon(
@@ -65,7 +69,10 @@ class ScreeningPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => AudioScreeningPage()),
+                                    builder: (context) => AudioScreeningPage(
+                                          animationCharacter:
+                                              animationCharacter,
+                                        )),
                               );
                             },
                             child: ImageIcon(
@@ -79,7 +86,10 @@ class ScreeningPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ChatScreeningPage()),
+                                    builder: (context) => ChatScreeningPage(
+                                          animationCharacter:
+                                              animationCharacter,
+                                        )),
                               );
                             },
                             child: ImageIcon(

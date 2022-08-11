@@ -4,7 +4,9 @@ import 'package:kiran_user_app/models/chat_model.dart';
 import 'package:rive/rive.dart';
 
 class ChatScreeningPage extends StatefulWidget {
-  const ChatScreeningPage({Key? key}) : super(key: key);
+  const ChatScreeningPage({Key? key, required this.animationCharacter})
+      : super(key: key);
+  final String animationCharacter;
 
   @override
   State<ChatScreeningPage> createState() => _ChatScreeningPageState();
@@ -51,8 +53,7 @@ class _ChatScreeningPageState extends State<ChatScreeningPage> {
               child: Stack(
                 children: [
                   Positioned.fill(
-                      child: RiveAnimation.asset(
-                          'assets/animations/flutter-puzzle.riv')),
+                      child: RiveAnimation.asset(widget.animationCharacter)),
                   Positioned(
                     left: 8.0,
                     child: IconButton(

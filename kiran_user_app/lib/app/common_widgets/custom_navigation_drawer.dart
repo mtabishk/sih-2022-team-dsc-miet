@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_user_header.dart';
 import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/app/services/service_page.dart';
+import 'package:kiran_user_app/app/yoga/yoga_page.dart';
 
 class CustomNavigationDrawer extends StatelessWidget {
   const CustomNavigationDrawer({
@@ -35,6 +36,10 @@ class CustomNavigationDrawer extends StatelessWidget {
         break;
       case 5:
         Navigator.of(context)
+            .push(CupertinoPageRoute(builder: (context) => YogaPage()));
+        break;
+      case 6:
+        Navigator.of(context)
             .push(CupertinoPageRoute(builder: (context) => ServicePage()));
         break;
     }
@@ -58,10 +63,11 @@ class CustomNavigationDrawer extends StatelessWidget {
             ),
             _buildDrawerItem(context, "Home", 0),
             _buildDrawerItem(context, "Services", 1),
-            _buildDrawerItem(context, "Profile", 2),
+            _buildDrawerItem(context, "Appointments", 2),
             _buildDrawerItem(context, "Wellness Goals", 3),
-            _buildDrawerItem(context, "Appointments", 4),
-            _buildDrawerItem(context, "Meditation", 5),
+            _buildDrawerItem(context, "Meditation", 4),
+            _buildDrawerItem(context, "Yoga", 5),
+            _buildDrawerItem(context, "Report", 6),
             SizedBox(height: 40.0),
             Row(
               mainAxisSize: MainAxisSize.min,
