@@ -5,7 +5,7 @@ import 'package:kiran_user_app/services/show_onboarding_provider.dart';
 import 'package:provider/provider.dart';
 
 class LandingPage extends StatelessWidget {
-  const LandingPage({Key? key}) : super(key: key);
+  LandingPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

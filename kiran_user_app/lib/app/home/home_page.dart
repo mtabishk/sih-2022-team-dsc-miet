@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_navigation_drawer.dart';
 import 'package:kiran_user_app/app/constants.dart';
-
-const LatLng SOURCE_LOCATION = LatLng(33.7510336, 75.1960689);
-const double CAMERA_ZOOM = 16;
-const double CAMERA_TILT = 80;
-const double CAMERA_BEARING = 30;
+import 'package:location/location.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -18,33 +14,59 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> navigationDrawerKey = GlobalKey();
-  Completer<GoogleMapController> _controller = Completer();
+  late GoogleMapController _controller;
+  LatLng _initialcameraposition = LatLng(20.5937, 78.9629);
 
-  late LatLng currentLocation;
-  late LatLng destinationLocation;
+  Location location = new Location();
+  late bool _serviceEnabled;
+  late PermissionStatus _permissionGranted;
+  late LocationData _locationData;
 
-  void _setInitialLocation() {
-    currentLocation =
-        LatLng(SOURCE_LOCATION.latitude, SOURCE_LOCATION.longitude);
+  Future<void> _getLocationData() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+  }
+
+  void _onMapCreated(GoogleMapController _cntlr) {
+    _controller = _cntlr;
+    location.onLocationChanged.listen((l) {
+      _controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(l.latitude!, l.longitude!),
+            zoom: 15,
+          ),
+        ),
+      );
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    // set up initial location
-    _setInitialLocation();
+    // update location
+    _getLocationData();
   }
 
   @override
   Widget build(BuildContext context) {
     // final _showOnBoarding =
     //     Provider.of<ShowOnboardingProvider>(context, listen: false);
-    CameraPosition initialCameraPosition = CameraPosition(
-      zoom: CAMERA_ZOOM,
-      tilt: CAMERA_TILT,
-      bearing: CAMERA_BEARING,
-      target: SOURCE_LOCATION,
-    );
     return Scaffold(
       key: navigationDrawerKey,
       appBar: AppBar(
@@ -91,16 +113,11 @@ class _HomePageState extends State<HomePage> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20.0),
                     child: GoogleMap(
-                      zoomControlsEnabled: false,
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      compassEnabled: false,
-                      tiltGesturesEnabled: false,
+                      initialCameraPosition:
+                          CameraPosition(target: _initialcameraposition),
                       mapType: MapType.normal,
-                      initialCameraPosition: initialCameraPosition,
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
-                      },
+                      onMapCreated: _onMapCreated,
+                      myLocationEnabled: true,
                     ),
                   ),
                 ),
