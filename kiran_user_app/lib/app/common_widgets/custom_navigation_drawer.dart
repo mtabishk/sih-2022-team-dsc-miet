@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_user_header.dart';
 import 'package:kiran_user_app/app/constants.dart';
-import 'package:kiran_user_app/app/services/service_page.dart';
-import 'package:kiran_user_app/app/yoga/yoga_page.dart';
+import 'package:kiran_user_app/app/other_services/service_page.dart';
+import 'package:kiran_user_app/app/wellness/wellness_page.dart';
 
 class CustomNavigationDrawer extends StatelessWidget {
   const CustomNavigationDrawer({
@@ -19,28 +19,26 @@ class CustomNavigationDrawer extends StatelessWidget {
         navigationDrawerKey.currentState!.closeDrawer();
         break;
       case 1:
-        Navigator.of(context)
-            .push(CupertinoPageRoute(builder: (context) => ServicePage()));
+        Navigator.of(context).push(CupertinoPageRoute(
+            builder: (context) => ServicePage(
+                  title: "Appointments",
+                )));
         break;
       case 2:
         Navigator.of(context)
-            .push(CupertinoPageRoute(builder: (context) => ServicePage()));
+            .push(CupertinoPageRoute(builder: (context) => WellnessPage()));
         break;
       case 3:
-        Navigator.of(context)
-            .push(CupertinoPageRoute(builder: (context) => ServicePage()));
+        Navigator.of(context).push(CupertinoPageRoute(
+            builder: (context) => ServicePage(
+                  title: "Other Services",
+                )));
         break;
       case 4:
-        Navigator.of(context)
-            .push(CupertinoPageRoute(builder: (context) => ServicePage()));
-        break;
-      case 5:
-        Navigator.of(context)
-            .push(CupertinoPageRoute(builder: (context) => YogaPage()));
-        break;
-      case 6:
-        Navigator.of(context)
-            .push(CupertinoPageRoute(builder: (context) => ServicePage()));
+        Navigator.of(context).push(CupertinoPageRoute(
+            builder: (context) => ServicePage(
+                  title: "Report",
+                )));
         break;
     }
   }
@@ -62,12 +60,10 @@ class CustomNavigationDrawer extends StatelessWidget {
               onClicked: () => print("clicked on user header"),
             ),
             _buildDrawerItem(context, "Home", 0),
-            _buildDrawerItem(context, "Services", 1),
-            _buildDrawerItem(context, "Appointments", 2),
-            _buildDrawerItem(context, "Wellness Goals", 3),
-            _buildDrawerItem(context, "Meditation", 4),
-            _buildDrawerItem(context, "Yoga", 5),
-            _buildDrawerItem(context, "Report", 6),
+            _buildDrawerItem(context, "Appointments", 1),
+            _buildDrawerItem(context, "Wellness", 2),
+            _buildDrawerItem(context, "Other Services", 3),
+            _buildDrawerItem(context, "Report", 4),
             SizedBox(height: 40.0),
             Row(
               mainAxisSize: MainAxisSize.min,

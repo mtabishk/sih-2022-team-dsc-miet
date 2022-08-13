@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kiran_user_app/app/bottom_navigation_page.dart';
 import 'package:kiran_user_app/app/home/home_page.dart';
 import 'package:kiran_user_app/app/screening/choose_character_page.dart';
 import 'package:kiran_user_app/app/screening/screening_page.dart';

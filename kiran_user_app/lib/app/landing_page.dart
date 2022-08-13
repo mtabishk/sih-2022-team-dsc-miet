@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kiran_user_app/app/bottom_navigation_page.dart';
 import 'package:kiran_user_app/app/home/home_page.dart';
 import 'package:kiran_user_app/app/onboarding/introduction_screen.dart';
 import 'package:kiran_user_app/services/show_onboarding_provider.dart';
