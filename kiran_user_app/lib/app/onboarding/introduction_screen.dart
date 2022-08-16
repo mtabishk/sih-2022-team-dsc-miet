@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kiran_user_app/app/sign_in/sign_in_page.dart';
+import 'package:kiran_user_app/models/nlp_service_model.dart';
+import 'package:kiran_user_app/services/nlp_service.dart';
 
 class IntroductionScreen extends StatelessWidget {
   const IntroductionScreen({Key? key}) : super(key: key);
