@@ -86,10 +86,7 @@ class ScreeningPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ChatScreeningPage(
-                                          animationCharacter:
-                                              animationCharacter,
-                                        )),
+                                    builder: (context) => ChatScreeningPage()),
                               );
                             },
                             child: ImageIcon(
