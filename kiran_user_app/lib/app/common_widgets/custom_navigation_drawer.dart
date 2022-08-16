@@ -31,14 +31,15 @@ class CustomNavigationDrawer extends StatelessWidget {
       case 3:
         Navigator.of(context).push(CupertinoPageRoute(
             builder: (context) => ServicePage(
-                  title: "Other Services",
+                  title: "Report",
                 )));
         break;
       case 4:
         Navigator.of(context).push(CupertinoPageRoute(
             builder: (context) => ServicePage(
-                  title: "Report",
+                  title: "Other Services",
                 )));
+
         break;
     }
   }
@@ -62,9 +63,9 @@ class CustomNavigationDrawer extends StatelessWidget {
             _buildDrawerItem(context, "Home", 0),
             _buildDrawerItem(context, "Appointments", 1),
             _buildDrawerItem(context, "Wellness", 2),
-            _buildDrawerItem(context, "Other Services", 3),
-            _buildDrawerItem(context, "Report", 4),
-            SizedBox(height: 40.0),
+            _buildDrawerItem(context, "Report", 3),
+            _buildDrawerItem(context, "Other Services", 4),
+            SizedBox(height: 80.0),
             Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,

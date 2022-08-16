@@ -31,7 +31,10 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PodVideoPlayer(controller: controller),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: PodVideoPlayer(controller: controller),
+      ),
     );
   }
 }

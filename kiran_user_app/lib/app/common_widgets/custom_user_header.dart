@@ -29,18 +29,18 @@ class CustomUserHeader extends StatelessWidget {
                 backgroundImage: AssetImage(imageUrl),
               ),
             ),
-            SizedBox(width: 20.0),
+            SizedBox(width: 10.0),
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
-                  style: TextStyle(fontSize: 20.0, color: Colors.white),
+                  style: TextStyle(fontSize: 14.0, color: Colors.white),
                 ),
                 Text(
                   email,
-                  style: TextStyle(fontSize: 14.0, color: Colors.white),
+                  style: TextStyle(fontSize: 10.0, color: Colors.white70),
                 )
               ],
             )

@@ -143,25 +143,26 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
                           Icons.close,
                         )),
                   ),
-                  Positioned(
-                      bottom: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "Result: $_predictionText",
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                            Text(
-                              "Confidence: $_predictionConfidence",
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                          ],
-                        ),
-                      )),
+                  // Preddiction Text
+                  // Positioned(
+                  //     bottom: 0,
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         mainAxisSize: MainAxisSize.min,
+                  //         children: [
+                  //           Text(
+                  //             "Result: $_predictionText",
+                  //             style: TextStyle(fontSize: 18.0),
+                  //           ),
+                  //           Text(
+                  //             "Confidence: $_predictionConfidence",
+                  //             style: TextStyle(fontSize: 18.0),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     )),
                 ],
               ),
             ),

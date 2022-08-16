@@ -114,6 +114,13 @@ class IntroductionScreen extends StatelessWidget {
             ),
           ),
         ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Text(
+            "Version 1.0.0",
+            style: TextStyle(color: Colors.white60),
+          ),
+        ),
       ]),
     );
   }

@@ -16,7 +16,7 @@ class WellnessPage extends StatelessWidget {
   ];
 
   final List<Widget> _listItemPages = [
-    ServicePage(title: "Wellness Page"),
+    ServicePage(title: "Wellness Goals"),
     RelaxationMusicPage(),
     ServicePage(title: "Relaxation Videos"),
     YogaPage(),
@@ -29,7 +29,7 @@ class WellnessPage extends StatelessWidget {
       appBar: AppBar(title: Text("Wellness")),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 80.0),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
