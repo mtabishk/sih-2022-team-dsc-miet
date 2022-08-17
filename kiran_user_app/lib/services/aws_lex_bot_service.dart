@@ -9,7 +9,7 @@ flutter run --dart-define=AWS_ACCESS_KEY_ID=AKIAUPI2SRNPC2RCA7ZJ --dart-define=A
 */
   String kRegion = 'us-east-1';
 
-  Future<List<String>> callBot(String message) async {
+  Future<List<String>> callBot(String message, String user) async {
     try {
       const AWSSigV4Signer signer = AWSSigV4Signer(
         credentialsProvider: AWSCredentialsProvider.environment(),
@@ -23,7 +23,7 @@ flutter run --dart-define=AWS_ACCESS_KEY_ID=AKIAUPI2SRNPC2RCA7ZJ --dart-define=A
       final request = AWSHttpRequest(
         method: AWSHttpMethod.post,
         uri: Uri.https('runtime.lex.$kRegion.amazonaws.com',
-            '/bot/bot/alias/sihChatBot/user/UserOne/text'),
+            '/bot/bot/alias/sihChatBot/user/$user/text'),
         headers: const {
           AWSHeaders.contentType: 'application/json',
         },

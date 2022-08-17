@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 8),
-              Image.asset("assets/images/wellness-goals.png"),
+              Image.asset("assets/images/wellness_bar_graph.png"),
             ],
           ),
         ),

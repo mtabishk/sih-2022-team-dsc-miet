@@ -33,7 +33,8 @@ class _ChatScreeningPageState extends State<ChatScreeningPage> {
       messages.insert(0, message);
     });
     log("${message.toJson()["text"]}");
-    List<String> _botRes = await _botService.callBot(message.toJson()["text"]);
+    List<String> _botRes =
+        await _botService.callBot(message.toJson()["text"], 'userOne');
     for (var m in _botRes) {
       setState(() {
         messages.insert(0, botMessageReply(m));
@@ -44,7 +45,8 @@ class _ChatScreeningPageState extends State<ChatScreeningPage> {
 
   void _sendInitialMessage(types.Message message) async {
     log("${message.toJson()["text"]}");
-    List<String> _botRes = await _botService.callBot(message.toJson()["text"]);
+    List<String> _botRes =
+        await _botService.callBot(message.toJson()["text"], 'userOne');
     for (var m in _botRes) {
       setState(() {
         messages.insert(0, botMessageReply(m));
@@ -73,7 +75,6 @@ class _ChatScreeningPageState extends State<ChatScreeningPage> {
   }
 
   void _loadMessages() async {
-    // List<types.Message> messagesList = [];
     final _initialText = types.PartialText(text: "hello");
     final _msg = types.TextMessage(
       author: _user,
