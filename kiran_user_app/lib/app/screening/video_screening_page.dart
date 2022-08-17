@@ -1,14 +1,16 @@
-import 'dart:collection';
-import 'dart:typed_data';
-
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/main.dart';
+import 'package:kiran_user_app/services/aws_lex_bot_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rive/rive.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:tflite/tflite.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:uuid/uuid.dart';
 
 class VideoScreeningPage extends StatefulWidget {
   const VideoScreeningPage({Key? key, required this.animationCharacter})
@@ -20,53 +22,18 @@ class VideoScreeningPage extends StatefulWidget {
 }
 
 class _VideoScreeningPageState extends State<VideoScreeningPage> {
+  // camera and video
   late CameraController _cameraController;
-  late stt.SpeechToText _speech;
-
   CameraImage? _cameraImage;
-  String _predictionText = '';
-  double _predictionConfidence = 0.0;
 
+  // speech to text
+  late stt.SpeechToText _speech;
   bool _isListening = false;
-  String _text = "Press the button and start speaking ";
+  String textOnScreen = "";
   double _confidence = 1.0;
 
-  @override
-  void initState() {
-    super.initState();
-    _speech = stt.SpeechToText();
-    this._loadModel();
-    this._loadCameraStream();
-  }
-
-  @override
-  void dispose() {
-    _cameraController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _listenToAudio() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (val) => print('onStatus: $val'),
-        onError: (val) => print('onError: $val'),
-      );
-      if (available) {
-        setState(() => _isListening = true);
-        _speech.listen(
-            onResult: (val) => setState(() {
-                  _text = val.recognizedWords;
-                  if (val.hasConfidenceRating && val.confidence > 0) {
-                    _confidence = val.confidence;
-                    print('Confidence: $_confidence');
-                  }
-                }));
-      }
-    } else {
-      setState(() => _isListening = false);
-      _speech.stop();
-    }
-  }
+  // text to speech
+  final FlutterTts _flutterTts = FlutterTts();
 
   Future<void> _loadCameraStream() async {
     _cameraController = CameraController(cameras![1], ResolutionPreset.low);
@@ -79,7 +46,7 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
             _cameraController.startImageStream((image) {
               _cameraImage = image;
               // call the api or run tflite model
-              _runEmotionDetectionModel();
+              //_runEmotionDetectionModel();
             });
           });
         }
@@ -120,6 +87,128 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
     }
   }
 
+  Future<void> _speakText(String? text) async {
+    if (text != null) {
+      print("%%%$text");
+      await _flutterTts.setLanguage("en-US");
+      await _flutterTts.setPitch(1);
+      await _flutterTts.speak(text);
+    }
+  }
+
+  Future<void> _getMicPermissions() async {
+    var status = await Permission.microphone.status;
+    if (!status.isGranted) {
+      await Permission.microphone.request();
+    }
+  }
+
+  Future<void> _listenToAudio() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) {
+          print('onStatus: $val');
+          if (val.compareTo('notListening') == 0 ||
+              val.compareTo("done") == 0) {
+            setState(() {
+              _isListening = false;
+              messages.insert(0, userMessageReply(textOnScreen));
+              _sendMessageToBot(textOnScreen);
+            });
+          }
+        },
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+            onResult: (val) => setState(() {
+                  textOnScreen = val.recognizedWords;
+                  if (val.hasConfidenceRating && val.confidence > 0) {
+                    _confidence = val.confidence;
+                    print('Confidence: $_confidence');
+                  }
+                }));
+      }
+    } else {
+      setState(() => _isListening = false);
+      print("not listening");
+      _speech.stop();
+    }
+  }
+
+  List<types.Message> messages = [];
+  final _user = const types.User(id: '1234556');
+  final _bot = const types.User(id: "123");
+  AWSLexBotService _botService = AWSLexBotService();
+
+  types.Message botMessageReply(String message) {
+    return types.TextMessage(
+      author: _bot,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: const Uuid().v4(),
+      text: message,
+    );
+  }
+
+  types.Message userMessageReply(String message) {
+    return types.TextMessage(
+      author: _user,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: const Uuid().v4(),
+      text: message,
+    );
+  }
+
+  void _sendMessageToBot(String text) async {
+    final _text = types.PartialText(text: text);
+    final _message = types.TextMessage(
+      author: _user,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: const Uuid().v4(),
+      text: _text.text,
+    );
+    print("*****${_message.toJson()["text"]}");
+    // response from bot
+    List<String> _botRes =
+        await _botService.callBot(_message.toJson()["text"], 'userThree');
+    setState(() {
+      _micDisabled = false;
+    });
+    for (var m in _botRes) {
+      print("#####$m");
+      setState(() {
+        messages.insert(0, botMessageReply(m));
+        textOnScreen = m;
+      });
+      await _speakText(m);
+      await _flutterTts.awaitSpeakCompletion(true);
+    }
+  }
+
+  String _predictionText = '';
+  double _predictionConfidence = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    this._loadModel();
+    this._loadCameraStream();
+    _getMicPermissions();
+    _speech = stt.SpeechToText();
+    _sendMessageToBot("hello");
+  }
+
+  @override
+  void dispose() {
+    _cameraController.dispose();
+    _speech.stop();
+    _speech.cancel();
+    super.dispose();
+  }
+
+  bool _micDisabled = true;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -143,26 +232,6 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
                           Icons.close,
                         )),
                   ),
-                  // Preddiction Text
-                  // Positioned(
-                  //     bottom: 0,
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: Column(
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         mainAxisSize: MainAxisSize.min,
-                  //         children: [
-                  //           Text(
-                  //             "Result: $_predictionText",
-                  //             style: TextStyle(fontSize: 18.0),
-                  //           ),
-                  //           Text(
-                  //             "Confidence: $_predictionConfidence",
-                  //             style: TextStyle(fontSize: 18.0),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     )),
                 ],
               ),
             ),
@@ -197,14 +266,17 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
                     top: 10,
                     child: Container(
                         padding: const EdgeInsets.all(18.0),
-                        child: Text(
-                          " " + _text + " ",
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              backgroundColor: Colors.black.withOpacity(0.7)),
-                        )),
+                        child: _micDisabled
+                            ? LinearProgressIndicator()
+                            : Text(
+                                " " + textOnScreen + " ",
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    backgroundColor:
+                                        Colors.black.withOpacity(0.7)),
+                              )),
                   ),
                 ],
               ),
@@ -220,7 +292,7 @@ class _VideoScreeningPageState extends State<VideoScreeningPage> {
         repeat: true,
         repeatPauseDuration: const Duration(milliseconds: 300),
         child: FloatingActionButton(
-          onPressed: _listenToAudio,
+          onPressed: _micDisabled ? null : _listenToAudio,
           child: _isListening ? Icon(Icons.mic) : Icon(Icons.mic_none),
         ),
       ),
