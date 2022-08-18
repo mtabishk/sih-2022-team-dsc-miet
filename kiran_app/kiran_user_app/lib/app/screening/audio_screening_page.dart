@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -26,13 +28,14 @@ class _AudioScreeningPageState extends State<AudioScreeningPage> {
   double _confidence = 1.0;
 
   // text to speech
-  final FlutterTts _flutterTts = FlutterTts();
+  late FlutterTts _flutterTts;
 
   Future<void> _speakText(String? text) async {
+    await _flutterTts.setLanguage("en-US");
+    await _flutterTts.setPitch(1);
     if (text != null) {
       print("%%%$text");
-      await _flutterTts.setLanguage("en-US");
-      await _flutterTts.setPitch(1);
+      await _flutterTts.awaitSpeakCompletion(true);
       await _flutterTts.speak(text);
     }
   }
@@ -127,11 +130,28 @@ class _AudioScreeningPageState extends State<AudioScreeningPage> {
     }
   }
 
+  Future<void> _getEngines() async {
+    var engines = await _flutterTts.getEngines;
+    if (engines != null) {
+      for (dynamic engine in engines) {
+        print(engine);
+      }
+    }
+  }
+
+  Future<void> _initFlutterTTS() async {
+    _flutterTts = FlutterTts();
+    if (Platform.isAndroid) {
+      _getEngines();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _getMicPermissions();
     _speech = stt.SpeechToText();
+    _initFlutterTTS();
     _sendMessageToBot("hello");
   }
 
@@ -139,6 +159,7 @@ class _AudioScreeningPageState extends State<AudioScreeningPage> {
   void dispose() {
     _speech.stop();
     _speech.cancel();
+    _flutterTts.stop();
     super.dispose();
   }
 
