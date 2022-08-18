@@ -4,8 +4,7 @@ import 'package:kiran_user_app/app/common_widgets/circle_button.dart';
 import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/app/screening/audio_screening_page.dart';
 import 'package:kiran_user_app/app/screening/chat_screening_page.dart';
-import 'package:kiran_user_app/app/screening/vid_screen.dart';
-import 'package:kiran_user_app/app/screening/video_screening_page.dart';
+import 'package:kiran_user_app/app/screening/video_screening.dart';
 import 'package:rive/rive.dart';
 
 class ScreeningPage extends StatelessWidget {
@@ -53,7 +52,7 @@ class ScreeningPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => VidScreen(
+                                    builder: (context) => VideoScreening(
                                           animationCharacter:
                                               animationCharacter,
                                         )),

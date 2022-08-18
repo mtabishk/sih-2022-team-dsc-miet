@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -13,16 +12,16 @@ import 'package:kiran_user_app/main.dart';
 import 'package:rive/rive.dart';
 import 'package:uuid/uuid.dart';
 
-class VidScreen extends StatefulWidget {
-  const VidScreen({Key? key, required this.animationCharacter})
+class VideoScreening extends StatefulWidget {
+  const VideoScreening({Key? key, required this.animationCharacter})
       : super(key: key);
   final String animationCharacter;
 
   @override
-  State<VidScreen> createState() => _VidScreenState();
+  State<VideoScreening> createState() => _VideoScreeningState();
 }
 
-class _VidScreenState extends State<VidScreen> {
+class _VideoScreeningState extends State<VideoScreening> {
   // camera and video
   late CameraController _cameraController;
   CameraImage? _cameraImage;
