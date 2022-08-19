@@ -1,5 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kiran_doctor_app/app/chat/chat_page.dart';
 import 'package:kiran_doctor_app/app/constants.dart';
+import 'package:kiran_doctor_app/models/doctor_location_model.dart';
+import 'package:kiran_doctor_app/services/firestore_service.dart';
+import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -11,15 +17,45 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> navigationDrawerKey = GlobalKey();
 
+  Location location = new Location();
+  late bool _serviceEnabled;
+  late PermissionStatus _permissionGranted;
+  late LocationData _locationData;
+
+  Future<void> _getLocationData() async {
+    final database = Provider.of<Database>(context, listen: false);
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    await database.updateDoctorLocation(
+        data: DoctorLocationModel(
+            locationLat: _locationData.latitude.toString(),
+            locationLng: _locationData.longitude.toString()));
+  }
+
   @override
   void initState() {
     super.initState();
+    // update location
+    _getLocationData();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final _showOnBoarding =
-    //     Provider.of<ShowOnboardingProvider>(context, listen: false);
     return Scaffold(
       key: navigationDrawerKey,
       appBar: AppBar(
@@ -29,7 +65,15 @@ class _HomePageState extends State<HomePage> {
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Image.asset("assets/icons/chat-logo.png"),
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => ChatPage(),
+                      ));
+                },
+                child: Image.asset("assets/icons/chat-logo.png")),
           ),
         ],
         iconTheme: IconThemeData(color: Colors.black),

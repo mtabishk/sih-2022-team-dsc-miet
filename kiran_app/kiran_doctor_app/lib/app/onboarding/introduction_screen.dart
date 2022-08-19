@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kiran_doctor_app/app/constants.dart';
-import 'package:kiran_doctor_app/app/sign_in/sign_in_page.dart';
+import 'package:kiran_doctor_app/services/onboarding_provider.dart';
+import 'package:provider/provider.dart';
 
 class IntroductionScreen extends StatelessWidget {
   const IntroductionScreen({Key? key}) : super(key: key);
@@ -10,6 +10,8 @@ class IntroductionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
+    final _showOnBoarding =
+        Provider.of<ShowOnboardingProvider>(context, listen: false);
 
     return Scaffold(
       backgroundColor: Colors.grey[900],
@@ -77,10 +79,9 @@ class IntroductionScreen extends StatelessWidget {
           bottom: 40.0,
           right: 10,
           child: InkWell(
-            onTap: () => Navigator.push(
-              context,
-              CupertinoPageRoute(builder: (context) => SignInPage()),
-            ),
+            onTap: () {
+              _showOnBoarding.changeQuestionareCompletedValue();
+            },
             child: Material(
               color: Colors.transparent,
               child: Container(

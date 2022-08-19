@@ -1,14 +1,58 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:kiran_doctor_app/app/common/custom_exception_alert_dialog.dart';
 import 'package:kiran_doctor_app/app/constants.dart';
-import 'package:kiran_doctor_app/app/home/home_page.dart';
-import 'package:kiran_doctor_app/app/sign_in/registration_page.dart';
+import 'package:kiran_doctor_app/models/doctor_info_model.dart';
+import 'package:kiran_doctor_app/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
 
   @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  /// Check If Document Exists
+  Future<bool> checkIfDocExists(String docId) async {
+    try {
+      //Get reference to Firestore collection
+      var collectionRef = FirebaseFirestore.instance.collection('users');
+      var doc = await collectionRef.doc(docId).get();
+      return doc.exists;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> _signInWithGoogle(BuildContext context, AuthBase auth) async {
+    try {
+      await auth.signInWithGoogle();
+      bool docExists = await checkIfDocExists(auth.currentuser?.uid as String);
+      if (!docExists) {
+        String uid = auth.currentuser?.uid as String;
+        final reference = FirebaseFirestore.instance.doc('doctors/$uid');
+        await reference.set(DoctorInfoModel(
+          email: auth.currentuser?.email as String,
+          displayName: auth.currentuser?.displayName as String,
+          registrationNumber: '',
+          locationLat: '',
+          locationLng: '',
+        ).toMap());
+      }
+    } on Exception catch (e) {
+      if (this.mounted) {
+        _showSignInError(context, e);
+      }
+
+      print(e.toString());
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -60,11 +104,9 @@ class SignInPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     primary: kPrimaryColor,
                   ),
-                  onPressed: () => Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => RegistrationPage(),
-                      )),
+                  onPressed: () async {
+                    await _signInWithGoogle(context, auth);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -94,11 +136,7 @@ class SignInPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     primary: kPrimaryColor,
                   ),
-                  onPressed: () => Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => HomePage(),
-                      )),
+                  onPressed: null,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -121,6 +159,18 @@ class SignInPage extends StatelessWidget {
           ),
         ),
       ]),
+    );
+  }
+
+  void _showSignInError(BuildContext context, Exception exception) {
+    if (exception is FirebaseException &&
+        exception.code == 'ERROR_ABORTED_BY_USER') {
+      return;
+    }
+    showExceptionAlertDialog(
+      context,
+      title: 'Sign In Failed',
+      exception: exception,
     );
   }
 }

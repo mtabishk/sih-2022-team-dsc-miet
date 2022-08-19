@@ -1,15 +1,25 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kiran_doctor_app/app/constants.dart';
-import 'package:kiran_doctor_app/app/home/home_page.dart';
+import 'package:kiran_doctor_app/models/doctor_registration_model.dart';
+import 'package:kiran_doctor_app/services/firestore_service.dart';
+import 'package:kiran_doctor_app/services/registration_number_provider.dart';
+import 'package:provider/provider.dart';
 
-class RegistrationPage extends StatelessWidget {
-  RegistrationPage({Key? key}) : super(key: key);
+class RegistrationNumberPage extends StatefulWidget {
+  RegistrationNumberPage({Key? key}) : super(key: key);
 
+  @override
+  State<RegistrationNumberPage> createState() => _RegistrationNumberPageState();
+}
+
+class _RegistrationNumberPageState extends State<RegistrationNumberPage> {
   final TextEditingController _registrationNumberCtr = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final registrationNumberCompleted =
+        Provider.of<ShowRegistrationNumberProvider>(context, listen: false);
+    final database = Provider.of<Database>(context, listen: false);
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
 
@@ -91,10 +101,17 @@ class RegistrationPage extends StatelessWidget {
           bottom: 40.0,
           right: 10,
           child: InkWell(
-            onTap: () => Navigator.push(
-              context,
-              CupertinoPageRoute(builder: (context) => HomePage()),
-            ),
+            onTap: () async {
+              if (_registrationNumberCtr.text.isNotEmpty) {
+                print(_registrationNumberCtr.text);
+                await database.updateDoctorRegistrationNummber(
+                  data: DoctorRegistrationNumberModel(
+                      doctorRegistrationNumber: _registrationNumberCtr.text),
+                );
+                registrationNumberCompleted
+                    .changeRegistrationNumberCompletedValue();
+              }
+            },
             child: Material(
               color: Colors.transparent,
               child: Container(

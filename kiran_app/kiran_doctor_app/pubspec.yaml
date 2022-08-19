@@ -32,6 +32,15 @@ dependencies:
   shared_preferences: ^2.0.13
   provider: ^6.0.2
   permission_handler: ^10.0.0
+  location: ^4.4.0
+  flutter_native_splash: ^2.2.7
+  flutter_chat_ui: ^1.6.4
+  uuid: ^3.0.6
+  # firebase and auth
+  firebase_core: ^1.21.0
+  firebase_auth: ^3.6.4
+  cloud_firestore: ^3.4.5
+  google_sign_in: ^5.4.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -41,6 +50,16 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.10.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/kiran-logo-large.png"
+
+flutter_native_splash:
+  color: "#4FF7BA"
+  image: "assets/icons/kiran-logo-large.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
