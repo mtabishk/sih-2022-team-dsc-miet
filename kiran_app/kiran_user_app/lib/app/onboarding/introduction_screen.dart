@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/app/sign_in/sign_in_page.dart';
 import 'package:kiran_user_app/models/nlp_service_model.dart';
 import 'package:kiran_user_app/services/nlp_service.dart';
@@ -66,11 +67,21 @@ class IntroductionScreen extends StatelessWidget {
                   height: _height * 0.5,
                   width: _height * 0.5,
                   child: Image.asset('assets/icons/kiran-logo-large.png')),
+              Text(
+                "Asking for Help is not a sign of weakness",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: kPrimaryColor,
+                  fontSize: 18.0,
+                ),
+              ),
               SizedBox(height: 16.0),
               Text(
-                "An app for screening the possible Mental health issues in adolescents and PwDs.",
+                "24/7 Mental Health Rehabilitation",
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],
