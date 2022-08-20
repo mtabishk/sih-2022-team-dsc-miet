@@ -48,8 +48,8 @@ class ChooseCharacterPage extends StatelessWidget {
         ),
         Positioned(
           top: _height / 2,
-          left: _width / 18,
-          right: _width / 18,
+          left: _width / 12,
+          right: _width / 12,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

@@ -145,6 +145,9 @@ class _VideoScreeningState extends State<VideoScreening> {
   }
 
   void _sendMessageToBot(String text) async {
+    if (text.isEmpty) {
+      return;
+    }
     final _text = types.PartialText(text: text);
     final _message = types.TextMessage(
       author: _user,
@@ -155,7 +158,7 @@ class _VideoScreeningState extends State<VideoScreening> {
     print("*****${_message.toJson()["text"]}");
     // response from bot
     List<String> _botRes =
-        await _botService.callBot(_message.toJson()["text"], 'userThree');
+        await _botService.callBot(_message.toJson()["text"], 'userTen');
     setState(() {
       _micDisabled = false;
     });
@@ -213,17 +216,18 @@ class _VideoScreeningState extends State<VideoScreening> {
           Expanded(
             flex: 2,
             child: Container(
-                padding: const EdgeInsets.all(18.0),
-                child: _micDisabled
-                    ? Text("")
-                    : Text(
-                        " " + textOnScreen + " ",
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            backgroundColor: Colors.black.withOpacity(0.7)),
-                      )),
+              padding: const EdgeInsets.all(18.0),
+              child: _micDisabled
+                  ? Text("")
+                  : Text(
+                      " " + textOnScreen + " ",
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          backgroundColor: Colors.black.withOpacity(0.7)),
+                    ),
+            ),
           ),
         ],
       )),
