@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/app/sign_in/sign_in_page.dart';
-import 'package:kiran_user_app/models/nlp_service_model.dart';
-import 'package:kiran_user_app/services/nlp_service.dart';
+import 'package:kiran_user_app/services/show_onboarding_provider.dart';
+import 'package:provider/provider.dart';
 
 class IntroductionScreen extends StatelessWidget {
   const IntroductionScreen({Key? key}) : super(key: key);
@@ -12,7 +12,8 @@ class IntroductionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-
+    final _showOnBoarding =
+        Provider.of<ShowOnboardingProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.grey[900],
       body: Stack(children: [
@@ -91,10 +92,9 @@ class IntroductionScreen extends StatelessWidget {
           bottom: 40.0,
           right: 10,
           child: InkWell(
-            onTap: () => Navigator.push(
-              context,
-              CupertinoPageRoute(builder: (context) => SignInPage()),
-            ),
+            onTap: () {
+              _showOnBoarding.changeQuestionareCompletedValue();
+            },
             child: Material(
               color: Colors.transparent,
               child: Container(

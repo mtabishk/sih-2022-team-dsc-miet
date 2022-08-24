@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kiran_user_app/app/home/home_page.dart';
 import 'package:kiran_user_app/app/screening/screening_page.dart';
+import 'package:kiran_user_app/models/user_animation_character.dart';
+import 'package:kiran_user_app/services/firestore_service.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
 class ChooseCharacterPage extends StatelessWidget {
@@ -9,6 +11,7 @@ class ChooseCharacterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final database = Provider.of<Database>(context, listen: false);
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -64,7 +67,11 @@ class ChooseCharacterPage extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   children: [
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        await database.updateUserAnimationCharacter(
+                          data: UserAnimationCharacterModel(
+                              animationCharacter: 'assets/animations/cat.riv'),
+                        );
                         Navigator.push(
                             context,
                             CupertinoPageRoute(
@@ -89,7 +96,12 @@ class ChooseCharacterPage extends StatelessWidget {
                     ),
                     SizedBox(width: 10.0),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        await database.updateUserAnimationCharacter(
+                          data: UserAnimationCharacterModel(
+                              animationCharacter:
+                                  'assets/animations/hi_yall_lau.riv'),
+                        );
                         Navigator.push(
                             context,
                             CupertinoPageRoute(
@@ -116,7 +128,11 @@ class ChooseCharacterPage extends StatelessWidget {
                     ),
                     SizedBox(width: 10.0),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        await database.updateUserAnimationCharacter(
+                            data: UserAnimationCharacterModel(
+                                animationCharacter:
+                                    'assets/animations/travie.riv'));
                         Navigator.push(
                             context,
                             CupertinoPageRoute(

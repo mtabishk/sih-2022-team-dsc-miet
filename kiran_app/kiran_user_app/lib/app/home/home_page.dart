@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_navigation_drawer.dart';
 import 'package:kiran_user_app/app/constants.dart';
+import 'package:kiran_user_app/models/user_location_model.dart';
+import 'package:kiran_user_app/services/firestore_service.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -23,6 +26,8 @@ class _HomePageState extends State<HomePage> {
   late LocationData _locationData;
 
   Future<void> _getLocationData() async {
+    final database = Provider.of<Database>(context, listen: false);
+
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -40,6 +45,10 @@ class _HomePageState extends State<HomePage> {
     }
 
     _locationData = await location.getLocation();
+    await database.updateUsersLocation(
+        data: UserLocationModel(
+            locationLat: _locationData.latitude.toString(),
+            locationLng: _locationData.longitude.toString()));
   }
 
   void _onMapCreated(GoogleMapController _cntlr) {
