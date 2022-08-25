@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_exception_alert_dialog.dart';
 import 'package:kiran_user_app/app/home/home_page.dart';
 import 'package:kiran_user_app/app/screening/choose_character_page.dart';
+import 'package:kiran_user_app/app/sign_in/phone_sign_in_page.dart';
 import 'package:kiran_user_app/models/user_info_model.dart';
 import 'package:kiran_user_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
@@ -178,7 +179,7 @@ class _SignInPageState extends State<SignInPage> {
                     Navigator.push(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) => HomePage(),
+                          builder: (context) => PhoneSignInPage(),
                         ));
                   },
                   child: Row(
