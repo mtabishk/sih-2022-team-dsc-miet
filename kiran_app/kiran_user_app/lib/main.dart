@@ -1,6 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/app/landing_page.dart';
 import 'package:kiran_user_app/services/animation_character_provider.dart';
@@ -17,6 +19,9 @@ Future<void> main() async {
   await Firebase.initializeApp();
   Constants.prefs = await SharedPreferences.getInstance();
   cameras = await availableCameras();
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+  }
   runApp(const MyApp());
 }
 

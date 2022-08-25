@@ -198,7 +198,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                                             _contactNumber = value;
                                           }
                                         }),
-                                SizedBox(height: 40),
+                                SizedBox(height: 80),
                                 InkWell(
                                   onTap: () async {
                                     print(_userDetailsFormKey.currentState);

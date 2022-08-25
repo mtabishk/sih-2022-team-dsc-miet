@@ -22,6 +22,14 @@ Widget CustomTextField({
         labelText: labelText,
         hintText: hintText,
       ),
+      validator: (value) {
+        if (value != null) {
+          if (value.isEmpty) {
+            return 'Please enter some text';
+          }
+        }
+        return null;
+      },
       onSaved: onSaved,
       onChanged: onChanged,
     );

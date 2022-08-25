@@ -4,6 +4,8 @@ import 'package:kiran_user_app/app/common_widgets/custom_user_header.dart';
 import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/app/other_services/service_page.dart';
 import 'package:kiran_user_app/app/wellness/wellness_page.dart';
+import 'package:kiran_user_app/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 class CustomNavigationDrawer extends StatelessWidget {
   const CustomNavigationDrawer({
@@ -46,6 +48,8 @@ class CustomNavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+
     final _name = 'Muhammad Tabish';
     final _email = 'mtabishkhanday@gmail.com';
     final _picUrl = 'assets/images/tabish-picture.png';
@@ -76,7 +80,9 @@ class CustomNavigationDrawer extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
                       )),
-                  onPressed: () => print("logout"),
+                  onPressed: () {
+                    auth.signOut();
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Text(

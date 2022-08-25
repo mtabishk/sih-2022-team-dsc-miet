@@ -13,8 +13,7 @@ class IntroductionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    final _showOnBoarding =
-        Provider.of<ShowOnboardingProvider>(context, listen: false);
+
     return Scaffold(
       backgroundColor: Colors.grey[900],
       body: Stack(children: [
@@ -94,12 +93,11 @@ class IntroductionScreen extends StatelessWidget {
           right: 10,
           child: InkWell(
             onTap: () {
-              _showOnBoarding.changeQuestionareCompletedValue();
-              // Navigator.push(
-              //     context,
-              //     CupertinoPageRoute(
-              //       builder: (context) => FeaturesScreen(),
-              //     ));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FeaturesScreen()),
+              );
+              // _showOnBoarding.changeQuestionareCompletedValue();
             },
             child: Material(
               color: Colors.transparent,

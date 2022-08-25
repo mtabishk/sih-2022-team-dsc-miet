@@ -69,6 +69,8 @@ class DatabaseWrapper extends StatelessWidget {
     if (_getUserDetails.getUserDetails) {
       return UserDetailsPage();
     }
+    print(
+        "Value: " + _showAnimationCharacter.showAnimationCharacter.toString());
     if (_showAnimationCharacter.showAnimationCharacter) {
       return ChooseCharacterPage();
     }

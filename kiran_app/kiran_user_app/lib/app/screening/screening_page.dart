@@ -129,6 +129,7 @@ class ScreeningPage extends StatelessWidget {
                         onTap: () async {
                           _showAnimationCharacter
                               .changeShowAnimationCharacterValue();
+                          Navigator.of(context).pop();
                         },
                         child: Material(
                           color: Colors.transparent,
