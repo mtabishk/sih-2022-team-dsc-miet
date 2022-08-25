@@ -37,7 +37,10 @@ class _SignInPageState extends State<SignInPage> {
         final reference = FirebaseFirestore.instance.doc('users/$uid');
         await reference.set(UserInfoModel(
           email: auth.currentuser?.email as String,
-          displayName: auth.currentuser?.displayName as String,
+          displayName: auth.currentuser?.displayName ?? '',
+          age: '',
+          gender: '',
+          emergencyContact: '',
           animationCharacter: '',
           locationLat: '',
           locationLng: '',
@@ -93,7 +96,7 @@ class _SignInPageState extends State<SignInPage> {
           ),
         ),
         Positioned(
-          top: _height / 2,
+          top: _height / 2.3,
           left: _width / 8,
           right: _width / 8,
           child: Column(
@@ -138,17 +141,52 @@ class _SignInPageState extends State<SignInPage> {
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFF0ACDCF),
                   ),
-                  onPressed: () => Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => HomePage(),
-                      )),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => HomePage(),
+                        ));
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ImageIcon(AssetImage("assets/icons/email.png")),
                       Text(
                         "Sign in with Email",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      Opacity(
+                          opacity: 0.0,
+                          child:
+                              ImageIcon(AssetImage("assets/icons/email.png"))),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 32.0),
+              SizedBox(
+                width: _width * 0.9,
+                height: 50.0,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF0ACDCF),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => HomePage(),
+                        ));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ImageIcon(AssetImage("assets/icons/phone-icon.png")),
+                      Text(
+                        "Sign in with Phone",
                         style: TextStyle(
                           fontSize: 16.0,
                         ),

@@ -54,14 +54,19 @@ class _VideoScreeningState extends State<VideoScreening> {
     });
   }
 
-  Future<void> _speakText(String? text) async {
+  Future<bool> _speakText(String? text) async {
     await _flutterTts.setLanguage("en-US");
     await _flutterTts.setPitch(1);
     if (text != null) {
-      print("%%%$text");
       await _flutterTts.awaitSpeakCompletion(true);
+      print("%speak%: $text");
+      setState(() {
+        textOnScreen = text;
+      });
       await _flutterTts.speak(text);
+      return true;
     }
+    return false;
   }
 
   Future<void> _getMicPermissions() async {
@@ -145,6 +150,7 @@ class _VideoScreeningState extends State<VideoScreening> {
   }
 
   void _sendMessageToBot(String text) async {
+    final _userId = 'User' + Uuid().v4();
     if (text.isEmpty) {
       return;
     }
@@ -155,20 +161,18 @@ class _VideoScreeningState extends State<VideoScreening> {
       id: const Uuid().v4(),
       text: _text.text,
     );
-    print("*****${_message.toJson()["text"]}");
+    print("*message*: ${_message.toJson()["text"]}");
     // response from bot
     List<String> _botRes =
-        await _botService.callBot(_message.toJson()["text"], 'userTen');
+        await _botService.callBot(_message.toJson()["text"], _userId);
     setState(() {
       _micDisabled = false;
     });
     for (var m in _botRes) {
-      print("#####$m");
-      await _speakText(m);
-      setState(() {
+      print("#response#: $m");
+      if (await _speakText(m)) {
         messages.insert(0, botMessageReply(m));
-        textOnScreen = m;
-      });
+      }
     }
   }
 
@@ -213,6 +217,8 @@ class _VideoScreeningState extends State<VideoScreening> {
               color: kSecondaryColor,
               backgroundColor: kPrimaryColor,
             ),
+          // Text(
+          //     'Prediction: $_predictionText\nConfidence: $_predictionConfidence'),
           Expanded(
             flex: 2,
             child: Container(

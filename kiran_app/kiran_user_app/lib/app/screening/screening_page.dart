@@ -5,6 +5,8 @@ import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/app/screening/audio_screening_page.dart';
 import 'package:kiran_user_app/app/screening/chat_screening_page.dart';
 import 'package:kiran_user_app/app/screening/video_screening.dart';
+import 'package:kiran_user_app/services/animation_character_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
 class ScreeningPage extends StatelessWidget {
@@ -14,6 +16,8 @@ class ScreeningPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _showAnimationCharacter =
+        Provider.of<AnimationCharacterProvider>(context, listen: false);
     double _width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
@@ -97,22 +101,67 @@ class ScreeningPage extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 48),
-                      DefaultTextStyle(
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.bold,
+                      SizedBox(
+                        height: 20.0,
+                        child: DefaultTextStyle(
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: kPrimaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          child: AnimatedTextKit(
+                            pause: Duration(milliseconds: 300),
+                            repeatForever: true,
+                            animatedTexts: [
+                              FlickerAnimatedText(
+                                  'Choose an option to start the screening'),
+                              // TypewriterAnimatedText(
+                              //     'Choose an option to start the screening'),
+                            ],
+                            onTap: () {
+                              print("Tap Event");
+                            },
+                          ),
                         ),
-                        child: AnimatedTextKit(
-                          pause: Duration(seconds: 2),
-                          repeatForever: true,
-                          animatedTexts: [
-                            TypewriterAnimatedText(
-                                'Choose an option to start the screening'),
-                          ],
-                          onTap: () {
-                            print("Tap Event");
-                          },
+                      ),
+                      SizedBox(height: 20),
+                      InkWell(
+                        onTap: () async {
+                          _showAnimationCharacter
+                              .changeShowAnimationCharacterValue();
+                        },
+                        child: Material(
+                          color: Colors.transparent,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey[700],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      16.0, 0.0, 0.0, 0.0),
+                                  child: Text(
+                                    "Skip",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    color: kPrimaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kiran_user_app/models/user_animation_character.dart';
+import 'package:kiran_user_app/models/user_details_model.dart';
 import 'package:kiran_user_app/models/user_info_model.dart';
 import 'package:kiran_user_app/models/user_location_model.dart';
 
@@ -9,6 +10,7 @@ abstract class Database {
   Future<void> updateUserAnimationCharacter(
       {required UserAnimationCharacterModel data});
   Future<void> updateUsersLocation({required UserLocationModel data});
+  Future<void> updateUserDetails({required UserDetailsModel data});
 }
 
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -29,6 +31,9 @@ class FirestoreDatabase implements Database {
   Future<UserInfoModel> getUserAccountInfoData() async {
     String path = 'users/$uid';
     String displayName = "";
+    String age = '';
+    String gender = '';
+    String emergencyContact = '';
     String email = "";
     String locationLat = "";
     String locationLng = "";
@@ -38,6 +43,8 @@ class FirestoreDatabase implements Database {
         .get()
         .then((DocumentSnapshot snapshot) {
       displayName = snapshot['displayName'].toString();
+      age = snapshot['age'].toString();
+      gender = snapshot['gender'].toString();
       email = snapshot['email'].toString();
       locationLat = snapshot['locationLat'].toString();
       locationLng = snapshot['locationLng'].toString();
@@ -45,6 +52,9 @@ class FirestoreDatabase implements Database {
     });
     return UserInfoModel(
       displayName: displayName,
+      gender: gender,
+      age: age,
+      emergencyContact: emergencyContact,
       email: email,
       animationCharacter: animationCharacter,
       locationLat: locationLat,
@@ -69,6 +79,18 @@ class FirestoreDatabase implements Database {
     await _refrence.update({
       'locationLat': data.locationLat,
       'locationLng': data.locationLng,
+    });
+  }
+
+  @override
+  Future<void> updateUserDetails({required UserDetailsModel data}) async {
+    String path = 'users/$uid';
+    final _refrence = FirebaseFirestore.instance.doc(path);
+    await _refrence.update({
+      'displayName': data.displayName,
+      'gender': data.gender,
+      'age': data.age,
+      'emergencyContact': data.emergencyContact,
     });
   }
 }

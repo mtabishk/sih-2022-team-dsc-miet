@@ -6,6 +6,7 @@ import 'package:kiran_user_app/app/landing_page.dart';
 import 'package:kiran_user_app/services/animation_character_provider.dart';
 import 'package:kiran_user_app/services/auth_service.dart';
 import 'package:kiran_user_app/services/show_onboarding_provider.dart';
+import 'package:kiran_user_app/services/user_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'services/shared_preferences_service.dart';
@@ -28,6 +29,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ShowOnboardingProvider>(
             create: (_) => ShowOnboardingProvider()),
+        ChangeNotifierProvider<UserDetailsProvider>(
+            create: (_) => UserDetailsProvider()),
         ChangeNotifierProvider<AnimationCharacterProvider>(
             create: (_) => AnimationCharacterProvider()),
         Provider<AuthBase>(create: (context) => Auth()),

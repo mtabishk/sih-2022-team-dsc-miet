@@ -1,6 +1,9 @@
 class UserInfoModel {
   final String email;
   final String displayName;
+  final String gender;
+  final String age;
+  final String emergencyContact;
   final String animationCharacter;
   final String locationLat;
   final String locationLng;
@@ -8,6 +11,9 @@ class UserInfoModel {
   UserInfoModel({
     required this.email,
     required this.displayName,
+    required this.gender,
+    required this.age,
+    required this.emergencyContact,
     required this.animationCharacter,
     required this.locationLat,
     required this.locationLng,
@@ -17,6 +23,9 @@ class UserInfoModel {
     return UserInfoModel(
       email: map['email'],
       displayName: map['displayName'],
+      gender: map['gender'],
+      age: map['age'],
+      emergencyContact: map['emergencyContact'],
       animationCharacter: map['animationCharacter'],
       locationLat: map['locationLat'],
       locationLng: map['locationLng'],

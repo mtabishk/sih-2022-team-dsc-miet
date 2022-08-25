@@ -5,10 +5,12 @@ import 'package:kiran_user_app/app/home/home_page.dart';
 import 'package:kiran_user_app/app/onboarding/introduction_screen.dart';
 import 'package:kiran_user_app/app/screening/choose_character_page.dart';
 import 'package:kiran_user_app/app/sign_in/sign_in_page.dart';
+import 'package:kiran_user_app/app/sign_in/user_details_page.dart';
 import 'package:kiran_user_app/services/animation_character_provider.dart';
 import 'package:kiran_user_app/services/auth_service.dart';
 import 'package:kiran_user_app/services/firestore_service.dart';
 import 'package:kiran_user_app/services/show_onboarding_provider.dart';
+import 'package:kiran_user_app/services/user_details_provider.dart';
 import 'package:provider/provider.dart';
 
 class LandingPage extends StatelessWidget {
@@ -60,8 +62,13 @@ class DatabaseWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _getUserDetails =
+        Provider.of<UserDetailsProvider>(context, listen: true);
     final _showAnimationCharacter =
         Provider.of<AnimationCharacterProvider>(context, listen: true);
+    if (_getUserDetails.getUserDetails) {
+      return UserDetailsPage();
+    }
     if (_showAnimationCharacter.showAnimationCharacter) {
       return ChooseCharacterPage();
     }
