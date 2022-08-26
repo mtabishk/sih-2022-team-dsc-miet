@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kiran_doctor_app/app/constants.dart';
-import 'package:kiran_doctor_app/models/doctor_registration_model.dart';
+import 'package:kiran_doctor_app/models/doctor_invite_code_model.dart';
 import 'package:kiran_doctor_app/services/firestore_service.dart';
-import 'package:kiran_doctor_app/services/registration_number_provider.dart';
+import 'package:kiran_doctor_app/services/invite_code_provider.dart';
 import 'package:provider/provider.dart';
 
-class RegistrationNumberPage extends StatefulWidget {
-  RegistrationNumberPage({Key? key}) : super(key: key);
+class InviteCodePage extends StatefulWidget {
+  InviteCodePage({Key? key}) : super(key: key);
 
   @override
-  State<RegistrationNumberPage> createState() => _RegistrationNumberPageState();
+  State<InviteCodePage> createState() => _InviteCodePageState();
 }
 
-class _RegistrationNumberPageState extends State<RegistrationNumberPage> {
-  final TextEditingController _registrationNumberCtr = TextEditingController();
+class _InviteCodePageState extends State<InviteCodePage> {
+  final TextEditingController _inviteCodeCtr = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final registrationNumberCompleted =
-        Provider.of<ShowRegistrationNumberProvider>(context, listen: false);
+    final _inviteCodeCompleted =
+        Provider.of<ShowInviteCodeProvider>(context, listen: false);
     final database = Provider.of<Database>(context, listen: false);
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
@@ -74,7 +75,7 @@ class _RegistrationNumberPageState extends State<RegistrationNumberPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Enter Registration Number",
+              Text("Enter Invite Code",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
@@ -83,7 +84,9 @@ class _RegistrationNumberPageState extends State<RegistrationNumberPage> {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 25.0, vertical: 20.0),
                 child: TextField(
-                  controller: _registrationNumberCtr,
+                  controller: _inviteCodeCtr,
+                  maxLength: 6,
+                  keyboardType: TextInputType.number,
                   style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.w500,
@@ -102,14 +105,12 @@ class _RegistrationNumberPageState extends State<RegistrationNumberPage> {
           right: 10,
           child: InkWell(
             onTap: () async {
-              if (_registrationNumberCtr.text.isNotEmpty) {
-                print(_registrationNumberCtr.text);
-                await database.updateDoctorRegistrationNummber(
-                  data: DoctorRegistrationNumberModel(
-                      doctorRegistrationNumber: _registrationNumberCtr.text),
+              if (_inviteCodeCtr.text.isNotEmpty) {
+                print(_inviteCodeCtr.text);
+                await database.updateDoctorInviteCode(
+                  data: DoctorInviteCodeModel(inviteCode: _inviteCodeCtr.text),
                 );
-                registrationNumberCompleted
-                    .changeRegistrationNumberCompletedValue();
+                _inviteCodeCompleted.changeInviteCodeCompletedValue();
               }
             },
             child: Material(

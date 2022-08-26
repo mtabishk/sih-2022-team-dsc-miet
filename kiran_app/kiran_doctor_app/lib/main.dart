@@ -4,7 +4,7 @@ import 'package:kiran_doctor_app/app/constants.dart';
 import 'package:kiran_doctor_app/app/landing_page.dart';
 import 'package:kiran_doctor_app/services/auth_service.dart';
 import 'package:kiran_doctor_app/services/onboarding_provider.dart';
-import 'package:kiran_doctor_app/services/registration_number_provider.dart';
+import 'package:kiran_doctor_app/services/invite_code_provider.dart';
 import 'package:kiran_doctor_app/services/shared_preferences_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ShowOnboardingProvider>(
             create: (_) => ShowOnboardingProvider()),
-        ChangeNotifierProvider<ShowRegistrationNumberProvider>(
-            create: (_) => ShowRegistrationNumberProvider()),
+        ChangeNotifierProvider<ShowInviteCodeProvider>(
+            create: (_) => ShowInviteCodeProvider()),
         Provider<AuthBase>(create: (context) => Auth()),
       ],
       child: MaterialApp(

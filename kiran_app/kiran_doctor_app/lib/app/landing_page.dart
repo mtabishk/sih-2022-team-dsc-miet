@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:kiran_doctor_app/app/constants.dart';
 import 'package:kiran_doctor_app/app/home/home_page.dart';
 import 'package:kiran_doctor_app/app/onboarding/introduction_screen.dart';
-import 'package:kiran_doctor_app/app/sign_in/registration_number_page.dart';
+import 'package:kiran_doctor_app/app/sign_in/invite_code_page.dart';
 import 'package:kiran_doctor_app/app/sign_in/sign_in_page.dart';
 import 'package:kiran_doctor_app/services/auth_service.dart';
 import 'package:kiran_doctor_app/services/firestore_service.dart';
 import 'package:kiran_doctor_app/services/onboarding_provider.dart';
-import 'package:kiran_doctor_app/services/registration_number_provider.dart';
+import 'package:kiran_doctor_app/services/invite_code_provider.dart';
 import 'package:provider/provider.dart';
 
 class LandingPage extends StatelessWidget {
@@ -27,6 +27,7 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
+    //auth.signOut();
     return StreamBuilder<User?>(
       stream: auth.authStateChanges(),
       //initialData: null,
@@ -59,10 +60,10 @@ class DatabaseWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _showRegistrationNumber =
-        Provider.of<ShowRegistrationNumberProvider>(context, listen: true);
-    if (!_showRegistrationNumber.registrationNumberCompleted) {
-      return RegistrationNumberPage();
+    final _showInviteCode =
+        Provider.of<ShowInviteCodeProvider>(context, listen: true);
+    if (!_showInviteCode.inviteCodeCompleted) {
+      return InviteCodePage();
     }
     return HomePage();
   }

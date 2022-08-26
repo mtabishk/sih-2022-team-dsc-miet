@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -195,22 +196,48 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 32),
               Text(
-                "Your appoitments",
+                "Upcomming appointment",
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 8),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                color: kPrimaryColor,
-                child: ListTile(
-                  isThreeLine: true,
-                  leading: Image.asset("assets/images/dr-strange.png"),
-                  title: Text("Dr Strange"),
-                  subtitle: Text("10:00 AM"),
-                ),
-              ),
+              StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('appointments')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done ||
+                        snapshot.connectionState == ConnectionState.active) {
+                      int length = snapshot.data!.docs.length;
+                      if (length == 0) {
+                        return Center(
+                          child: Text(
+                            "No upcoming appointments",
+                            style: TextStyle(fontSize: 14.0),
+                          ),
+                        );
+                      } else {
+                        final doc = snapshot.data!.docs.first;
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          color: kPrimaryColor,
+                          child: ListTile(
+                            isThreeLine: true,
+                            leading: Image.asset("assets/images/doctor.png"),
+                            title: Text('Dhavni Gupta'),
+                            subtitle: Text('Mental Health'),
+                          ),
+                        );
+                      }
+                    }
+
+                    return Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: kPrimaryColor,
+                      ),
+                    );
+                  }),
               SizedBox(height: 32),
               Text(
                 "Wellness Goals progress",

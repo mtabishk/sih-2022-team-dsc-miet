@@ -13,6 +13,7 @@ abstract class Database {
   Future<void> updateUsersLocation({required UserLocationModel data});
   Future<void> updateUserDetails({required UserDetailsModel data});
   Future<void> submitFeedbackData(FeedbackModel feedback);
+  Future<void> scheduleAppointment(String doctorUid);
 }
 
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -103,5 +104,16 @@ class FirestoreDatabase implements Database {
     String path = 'feedback/$uid';
     final _reference = FirebaseFirestore.instance.doc(path);
     await _reference.set(feedback.toMap());
+  }
+
+  @override
+  Future<void> scheduleAppointment(String doctorUid) async {
+    String path = 'appointments/$doctorUid';
+    final _reference = FirebaseFirestore.instance.doc(path);
+    await _reference.set({
+      'doctorUid': doctorUid,
+      'patientUid': uid,
+      'date': DateTime.now(),
+    });
   }
 }

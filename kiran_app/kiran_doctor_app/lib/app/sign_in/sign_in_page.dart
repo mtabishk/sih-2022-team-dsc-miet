@@ -18,7 +18,7 @@ class _SignInPageState extends State<SignInPage> {
   Future<bool> checkIfDocExists(String docId) async {
     try {
       //Get reference to Firestore collection
-      var collectionRef = FirebaseFirestore.instance.collection('users');
+      var collectionRef = FirebaseFirestore.instance.collection('doctors');
       var doc = await collectionRef.doc(docId).get();
       return doc.exists;
     } catch (e) {
@@ -36,9 +36,12 @@ class _SignInPageState extends State<SignInPage> {
         await reference.set(DoctorInfoModel(
           email: auth.currentuser?.email as String,
           displayName: auth.currentuser?.displayName as String,
-          registrationNumber: '',
+          inviteCode: '',
           locationLat: '',
           locationLng: '',
+          isOnline: false,
+          specialization: 'Mental Health',
+          phoneNumber: '9909090909',
         ).toMap());
       }
     } on Exception catch (e) {
@@ -143,6 +146,33 @@ class _SignInPageState extends State<SignInPage> {
                       ImageIcon(AssetImage("assets/icons/email.png")),
                       Text(
                         "Sign in with Email",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      Opacity(
+                          opacity: 0.0,
+                          child:
+                              ImageIcon(AssetImage("assets/icons/email.png"))),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 32.0),
+              SizedBox(
+                width: _width * 0.9,
+                height: 50.0,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF0ACDCF),
+                  ),
+                  onPressed: null,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ImageIcon(AssetImage("assets/icons/phone-icon.png")),
+                      Text(
+                        "Sign in with Phone",
                         style: TextStyle(
                           fontSize: 16.0,
                         ),

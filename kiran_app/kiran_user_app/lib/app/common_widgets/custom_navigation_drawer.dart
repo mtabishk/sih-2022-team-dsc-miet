@@ -1,12 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kiran_user_app/app/appointment/appointment_page.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_alert_dialog.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_exception_alert_dialog.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_user_header.dart';
 import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/app/feedback/feedback_page.dart';
 import 'package:kiran_user_app/app/other_services/service_page.dart';
+import 'package:kiran_user_app/app/report/reports_page.dart';
 import 'package:kiran_user_app/app/wellness/wellness_page.dart';
 import 'package:kiran_user_app/services/auth_service.dart';
 import 'package:kiran_user_app/services/firestore_service.dart';
@@ -29,8 +31,8 @@ class CustomNavigationDrawer extends StatelessWidget {
         break;
       case 1:
         Navigator.of(context).push(CupertinoPageRoute(
-            builder: (context) => ServicePage(
-                  title: "Appointments",
+            builder: (context) => AppointmentPage(
+                  database: database,
                 )));
         break;
       case 2:
@@ -38,10 +40,8 @@ class CustomNavigationDrawer extends StatelessWidget {
             .push(CupertinoPageRoute(builder: (context) => WellnessPage()));
         break;
       case 3:
-        Navigator.of(context).push(CupertinoPageRoute(
-            builder: (context) => ServicePage(
-                  title: "Report",
-                )));
+        Navigator.of(context)
+            .push(CupertinoPageRoute(builder: (context) => ReportPage()));
         break;
       case 4:
         Navigator.of(context).push(CupertinoPageRoute(
