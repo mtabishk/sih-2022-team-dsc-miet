@@ -92,7 +92,7 @@ class Auth implements AuthBase {
 
       UserCredential userCredential =
           await _firebaseAuth.signInWithCredential(credential);
-      print("logged in");
+      return;
     } catch (e) {
       print(e.toString());
     }

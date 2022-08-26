@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:kiran_user_app/app/common_widgets/custom_alert_dialog.dart';
+import 'package:kiran_user_app/app/common_widgets/custom_exception_alert_dialog.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_navigation_drawer.dart';
 import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/models/user_location_model.dart';
@@ -18,9 +21,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> navigationDrawerKey = GlobalKey();
   late GoogleMapController _controller;
+
   LatLng _initialcameraposition = LatLng(20.5937, 78.9629);
 
   Location location = new Location();
+
   late bool _serviceEnabled;
   late PermissionStatus _permissionGranted;
   late LocationData _locationData;
@@ -65,17 +70,72 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Set<Marker> _markers = Set<Marker>();
+
+  void _addMarkersToMap() async {
+    final BitmapDescriptor doctorIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.0, size: Size(100, 100)),
+        'assets/icons/doctor-pin.png');
+    setState(() {
+      _markers.add(Marker(
+        markerId: MarkerId(1234.toString()),
+        position: LatLng(10.8273946, 77.0600763),
+        infoWindow: InfoWindow(
+          title: 'Test Doctor 1 ',
+          snippet: 'Psychologist',
+        ),
+        icon: doctorIcon, //Icon for Marker
+      ));
+      _markers.add(Marker(
+        markerId: MarkerId(1235.toString()),
+        position: LatLng(10.828361, 77.066119),
+        infoWindow: InfoWindow(
+          title: 'Test Doctor 2 ',
+          snippet: 'Psychologist',
+        ),
+        icon: doctorIcon, //Icon for Marker
+      ));
+      _markers.add(Marker(
+        markerId: MarkerId(1236.toString()),
+        position: LatLng(10.828994, 77.060626),
+        infoWindow: InfoWindow(
+          title: 'Test Doctor 3 ',
+          snippet: 'Speech Therapist',
+        ),
+        icon: doctorIcon, //Icon for Marker
+      ));
+      _markers.add(Marker(
+        markerId: MarkerId(1237.toString()),
+        position: LatLng(10.828087, 77.056206),
+        infoWindow: InfoWindow(
+          title: 'Test Doctor 4 ',
+          snippet: 'Physician',
+        ),
+        icon: doctorIcon, //Icon for Marker
+      ));
+      _markers.add(Marker(
+        markerId: MarkerId(1238.toString()),
+        position: LatLng(10.832387, 77.071977),
+        infoWindow: InfoWindow(
+          title: 'Test Doctor 5 ',
+          snippet: 'Physician',
+        ),
+        icon: doctorIcon, //Icon for Marker
+      ));
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     // update location
-    _getLocationData();
+    this._getLocationData();
+    // add markers to map
+    this._addMarkersToMap();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final _showOnBoarding =
-    //     Provider.of<ShowOnboardingProvider>(context, listen: false);
     return Scaffold(
       key: navigationDrawerKey,
       appBar: AppBar(
@@ -88,6 +148,7 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: CustomNavigationDrawer(
         navigationDrawerKey: navigationDrawerKey,
+        database: Provider.of<Database>(context, listen: false),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -126,6 +187,7 @@ class _HomePageState extends State<HomePage> {
                           CameraPosition(target: _initialcameraposition),
                       mapType: MapType.normal,
                       onMapCreated: _onMapCreated,
+                      markers: _markers,
                       myLocationEnabled: true,
                     ),
                   ),

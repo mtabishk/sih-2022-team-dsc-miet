@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:kiran_user_app/models/feedback_model.dart';
 import 'package:kiran_user_app/models/user_animation_character.dart';
 import 'package:kiran_user_app/models/user_details_model.dart';
 import 'package:kiran_user_app/models/user_info_model.dart';
@@ -11,6 +12,7 @@ abstract class Database {
       {required UserAnimationCharacterModel data});
   Future<void> updateUsersLocation({required UserLocationModel data});
   Future<void> updateUserDetails({required UserDetailsModel data});
+  Future<void> submitFeedbackData(FeedbackModel feedback);
 }
 
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -34,6 +36,7 @@ class FirestoreDatabase implements Database {
     String age = '';
     String gender = '';
     String emergencyContact = '';
+    String emergencyContactName = '';
     String email = "";
     String locationLat = "";
     String locationLng = "";
@@ -55,6 +58,7 @@ class FirestoreDatabase implements Database {
       gender: gender,
       age: age,
       emergencyContact: emergencyContact,
+      emergencyContactName: emergencyContactName,
       email: email,
       animationCharacter: animationCharacter,
       locationLat: locationLat,
@@ -92,5 +96,12 @@ class FirestoreDatabase implements Database {
       'age': data.age,
       'emergencyContact': data.emergencyContact,
     });
+  }
+
+  @override
+  Future<void> submitFeedbackData(FeedbackModel feedback) async {
+    String path = 'feedback/$uid';
+    final _reference = FirebaseFirestore.instance.doc(path);
+    await _reference.set(feedback.toMap());
   }
 }

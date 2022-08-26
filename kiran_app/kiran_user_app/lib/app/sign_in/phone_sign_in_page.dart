@@ -42,7 +42,7 @@ class _PhoneSignInPageState extends State<PhoneSignInPage> {
       final auth = Provider.of<AuthBase>(context, listen: false);
 
       await auth.signInwithPhoneNumber(verificationId, otp, context);
-      print(auth.currentuser?.uid);
+      print("Phone Login Uid: ${auth.currentuser?.uid}");
       bool docExists = await checkIfDocExists(auth.currentuser?.uid as String);
       if (!docExists) {
         String uid = auth.currentuser?.uid as String;
@@ -53,6 +53,7 @@ class _PhoneSignInPageState extends State<PhoneSignInPage> {
           age: '',
           gender: '',
           emergencyContact: '',
+          emergencyContactName: '',
           animationCharacter: '',
           locationLat: '',
           locationLng: '',
@@ -67,7 +68,7 @@ class _PhoneSignInPageState extends State<PhoneSignInPage> {
     }
   }
 
-  int start = 30;
+  int start = 60;
   bool wait = true;
   bool _loading = false;
   final GlobalKey<FormState> _phoneFormKey = GlobalKey<FormState>();
@@ -306,6 +307,7 @@ class _PhoneSignInPageState extends State<PhoneSignInPage> {
               otp = pin;
               try {
                 await _signInWithPhoneNumber(context, contact);
+                Navigator.of(context).pop();
               } on FirebaseException catch (e) {
                 showSnackBar(context, e.message.toString());
               } catch (e) {
@@ -351,10 +353,7 @@ class _PhoneSignInPageState extends State<PhoneSignInPage> {
                       }
                       // sign in with phone number
                       await _signInWithPhoneNumber(context, contact);
-                      int count = 0;
-                      Navigator.popUntil(context, (route) {
-                        return count++ == 3;
-                      });
+                      Navigator.of(context).pop();
                     },
               child: Text("RESEND OTP", style: TextStyle(color: kPrimaryColor)),
             ),

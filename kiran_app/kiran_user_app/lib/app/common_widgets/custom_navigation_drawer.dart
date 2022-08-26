@@ -1,18 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kiran_user_app/app/common_widgets/custom_alert_dialog.dart';
+import 'package:kiran_user_app/app/common_widgets/custom_exception_alert_dialog.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_user_header.dart';
 import 'package:kiran_user_app/app/constants.dart';
+import 'package:kiran_user_app/app/feedback/feedback_page.dart';
 import 'package:kiran_user_app/app/other_services/service_page.dart';
 import 'package:kiran_user_app/app/wellness/wellness_page.dart';
 import 'package:kiran_user_app/services/auth_service.dart';
+import 'package:kiran_user_app/services/firestore_service.dart';
 import 'package:provider/provider.dart';
 
 class CustomNavigationDrawer extends StatelessWidget {
   const CustomNavigationDrawer({
     Key? key,
     required this.navigationDrawerKey,
+    required this.database,
   }) : super(key: key);
   final navigationDrawerKey;
+  final Database database;
 
   void onClickedDrawerItem(BuildContext context, int index) {
     Navigator.of(context).pop();
@@ -38,8 +45,8 @@ class CustomNavigationDrawer extends StatelessWidget {
         break;
       case 4:
         Navigator.of(context).push(CupertinoPageRoute(
-            builder: (context) => ServicePage(
-                  title: "Other Services",
+            builder: (context) => FeedbackPage(
+                  database: database,
                 )));
 
         break;
@@ -50,9 +57,9 @@ class CustomNavigationDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
 
-    final _name = 'Muhammad Tabish';
-    final _email = 'mtabishkhanday@gmail.com';
-    final _picUrl = 'assets/images/tabish-picture.png';
+    final _name = 'Test1';
+    final _email = 'email@test.com';
+    final _picUrl = 'assets/images/dr-strange.png';
     return Drawer(
       child: Material(
         color: kPrimaryColor,
@@ -68,7 +75,7 @@ class CustomNavigationDrawer extends StatelessWidget {
             _buildDrawerItem(context, "Appointments", 1),
             _buildDrawerItem(context, "Wellness", 2),
             _buildDrawerItem(context, "Report", 3),
-            _buildDrawerItem(context, "Other Services", 4),
+            _buildDrawerItem(context, "Feedback", 4),
             SizedBox(height: 80.0),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -81,7 +88,7 @@ class CustomNavigationDrawer extends StatelessWidget {
                         borderRadius: BorderRadius.circular(18.0),
                       )),
                   onPressed: () {
-                    auth.signOut();
+                    _confirmSignOut(context);
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
@@ -115,5 +122,28 @@ class CustomNavigationDrawer extends StatelessWidget {
       ),
       onTap: () => onClickedDrawerItem(context, index),
     );
+  }
+
+  Future<void> _confirmSignOut(BuildContext context) async {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+    try {
+      final didRequestSignOut = await showAlertDialog(
+        context,
+        title: 'Logout',
+        content: 'Are you sure that you want to logout?',
+        defaultActionText: 'Cancel',
+        cancelActionText: 'Confirm',
+      );
+
+      if (didRequestSignOut == true) {
+        // cancel the ride here
+        await auth.signOut();
+      }
+    } on FirebaseException catch (e) {
+      showExceptionAlertDialog(context,
+          title: e.message.toString(), exception: e);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

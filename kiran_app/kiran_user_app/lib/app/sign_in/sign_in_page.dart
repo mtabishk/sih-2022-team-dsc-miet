@@ -42,6 +42,7 @@ class _SignInPageState extends State<SignInPage> {
           age: '',
           gender: '',
           emergencyContact: '',
+          emergencyContactName: '',
           animationCharacter: '',
           locationLat: '',
           locationLng: '',
@@ -143,11 +144,11 @@ class _SignInPageState extends State<SignInPage> {
                     primary: Color(0xFF0ACDCF),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => HomePage(),
-                        ));
+                    // Navigator.push(
+                    //     context,
+                    //     CupertinoPageRoute(
+                    //       builder: (context) => HomePage(),
+                    //     ));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -29,7 +29,7 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
-    //auth.signOut();
+    // auth.signOut();
     return StreamBuilder<User?>(
       stream: auth.authStateChanges(),
       //initialData: null,

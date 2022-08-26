@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kiran_user_app/app/constants.dart';
 
 Future showAlertDialog(
   BuildContext context, {
@@ -20,11 +21,13 @@ Future showAlertDialog(
           if (cancelActionText != null)
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text(cancelActionText),
+              child: Text(cancelActionText,
+                  style: TextStyle(color: kPrimaryColor)),
             ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(defaultActionText),
+            child:
+                Text(defaultActionText, style: TextStyle(color: kPrimaryColor)),
           ),
         ],
       ),

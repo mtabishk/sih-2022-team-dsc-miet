@@ -22,6 +22,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   List<String> _genderTypes = ["Male", "Female", "Prefer not to say"];
   int _age = 0;
   String _contactNumber = '';
+  String _contactName = '';
   bool _ageUnder18 = false;
 
   @override
@@ -181,23 +182,30 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                                       }
                                     }),
                                 SizedBox(height: 20),
-                                !_ageUnder18
-                                    ? CustomTextField(
-                                        labelText: "Contact Number",
-                                        hintText: "Enter your contact number",
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CustomTextField(
+                                        labelText: "Emergency Contact Name",
+                                        hintText:
+                                            "Enter your Emergency Contact name",
                                         onSaved: (value) {
                                           if (value != null) {
-                                            _contactNumber = value;
+                                            _contactName = value;
                                           }
-                                        })
-                                    : CustomTextField(
-                                        labelText: "Guardians Number",
-                                        hintText: "Enter your contact number",
+                                        }),
+                                    SizedBox(height: 10),
+                                    CustomTextField(
+                                        labelText: "Emergency Contact",
+                                        hintText:
+                                            "Enter your Emergency Contact number",
                                         onSaved: (value) {
                                           if (value != null) {
                                             _contactNumber = value;
                                           }
                                         }),
+                                  ],
+                                ),
                                 SizedBox(height: 80),
                                 InkWell(
                                   onTap: () async {
@@ -208,12 +216,13 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
                                       await database.updateUserDetails(
                                           data: UserDetailsModel(
-                                              displayName:
-                                                  _firstName + " " + _lastName,
-                                              gender: _gender,
-                                              age: _age.toString(),
-                                              emergencyContact:
-                                                  _contactNumber));
+                                        displayName:
+                                            _firstName + " " + _lastName,
+                                        gender: _gender,
+                                        age: _age.toString(),
+                                        emergencyContact: _contactNumber,
+                                        emergencyContactName: _contactName,
+                                      ));
                                     }
 
                                     _showUserDetails
