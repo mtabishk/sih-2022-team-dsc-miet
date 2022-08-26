@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/app/other_services/service_page.dart';
 import 'package:kiran_user_app/app/wellness/relaxation_music/relaxation_music_page.dart';
+import 'package:kiran_user_app/app/wellness/relaxation_video/relaxation_video_page.dart';
+import 'package:kiran_user_app/app/wellness/wellness_goals/wellness_goals_page.dart';
 import 'package:kiran_user_app/app/wellness/yoga/yoga_page.dart';
 
 class WellnessPage extends StatelessWidget {
@@ -16,9 +18,9 @@ class WellnessPage extends StatelessWidget {
   ];
 
   final List<Widget> _listItemPages = [
-    ServicePage(title: "Wellness Goals"),
+    WellnessGoalsPage(),
     RelaxationMusicPage(),
-    ServicePage(title: "Relaxation Videos"),
+    RelaxationVideoPage(),
     YogaPage(),
   ];
 
