@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:kiran_user_app/app/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ReportPage extends StatelessWidget {
+class ReportPage extends StatefulWidget {
   const ReportPage({Key? key}) : super(key: key);
 
+  @override
+  State<ReportPage> createState() => _ReportPageState();
+}
+
+class _ReportPageState extends State<ReportPage> {
+  bool isDownloading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,18 +18,27 @@ class ReportPage extends StatelessWidget {
         title: Text("Report"),
       ),
       body: Center(
-        child: ElevatedButton(
-            onPressed: () async {
-              await showReportDownloadedDialog(
-                context,
-                title: "Report",
-                content: "Report has been downloaded",
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              primary: kPrimaryColor,
-            ),
-            child: Text("Downlaod Report")),
+        child: isDownloading
+            ? CircularProgressIndicator()
+            : ElevatedButton(
+                onPressed: () async {
+                  setState(() {
+                    isDownloading = true;
+                  });
+                  await Future.delayed(Duration(seconds: 2));
+                  setState(() {
+                    isDownloading = false;
+                  });
+                  await showReportDownloadedDialog(
+                    context,
+                    title: "Report",
+                    content: "Report has been downloaded",
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: kPrimaryColor,
+                ),
+                child: Text("Downlaod Report")),
       ),
     );
   }

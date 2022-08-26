@@ -143,13 +143,7 @@ class _SignInPageState extends State<SignInPage> {
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFF0ACDCF),
                   ),
-                  onPressed: () {
-                    // Navigator.push(
-                    //     context,
-                    //     CupertinoPageRoute(
-                    //       builder: (context) => HomePage(),
-                    //     ));
-                  },
+                  onPressed: null,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

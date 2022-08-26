@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:kiran_user_app/app/common_widgets/circle_button.dart';
 import 'package:kiran_user_app/app/constants.dart';
 import 'package:kiran_user_app/app/screening/audio_screening_page.dart';
@@ -145,7 +146,7 @@ class ScreeningPage extends StatelessWidget {
                                   padding: const EdgeInsets.fromLTRB(
                                       16.0, 0.0, 0.0, 0.0),
                                   child: Text(
-                                    "Skip",
+                                    "Skip Screening",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -164,6 +165,29 @@ class ScreeningPage extends StatelessWidget {
                             ),
                           ),
                         ),
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text("Call Helpline directly here",
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              )),
+                          IconButton(
+                            onPressed: () async {
+                              const number = '18005990019';
+                              await FlutterPhoneDirectCaller.callNumber(number);
+                            },
+                            icon: Icon(
+                              Icons.phone,
+                              size: 36.0,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

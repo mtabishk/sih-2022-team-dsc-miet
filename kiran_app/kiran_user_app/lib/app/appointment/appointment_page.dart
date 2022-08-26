@@ -28,36 +28,48 @@ class _AppointmentPageState extends State<AppointmentPage> {
             SizedBox(height: 20),
             StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
-                    .collection('appointments')
+                    .collection('doctors')
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done ||
                       snapshot.connectionState == ConnectionState.active) {
-                    int length = snapshot.data!.docs.length;
-                    if (length == 0) {
-                      return Center(
-                        child: Text(
-                          "No upcoming appointments",
-                          style: TextStyle(fontSize: 14.0),
-                        ),
-                      );
-                    } else {
-                      final doc = snapshot.data!.docs.first;
-                      return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        color: kPrimaryColor,
-                        child: ListTile(
-                          isThreeLine: true,
-                          leading: Image.asset("assets/images/doctor.png"),
-                          title: Text('Dhavni Gupta'),
-                          subtitle: Text('Mental Health'),
-                        ),
-                      );
-                    }
-                  }
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: kPrimaryColor.withOpacity(0.5),
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final doc = snapshot.data!.docs[index];
+                          final doctorUid = snapshot.data!.docs[index].id;
+                          final bool isOnline = doc['isOnline'];
 
+                          return ListTile(
+                            onTap: !isOnline
+                                ? null
+                                : () async {
+                                    // schedule appointment
+                                    await showAppointmentDialog(
+                                      context,
+                                      title: "Book Appointment",
+                                      content:
+                                          "Are you sure you want to schedule an appointment with ${doc['displayName']}?",
+                                      doctorUid: doctorUid,
+                                    );
+                                  },
+                            title: Text(doc['displayName']),
+                            subtitle: Text(doc['specialization']),
+                            trailing: Icon(
+                              Icons.circle,
+                              color: isOnline ? Colors.green : Colors.red,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
                   return Center(
                     child: CircularProgressIndicator(
                       backgroundColor: kPrimaryColor,

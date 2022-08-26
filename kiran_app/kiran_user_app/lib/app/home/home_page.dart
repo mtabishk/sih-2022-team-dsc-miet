@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_alert_dialog.dart';
 import 'package:kiran_user_app/app/common_widgets/custom_exception_alert_dialog.dart';
@@ -143,7 +144,16 @@ class _HomePageState extends State<HomePage> {
         elevation: 0.0,
         backgroundColor: kSecondaryColor,
         actions: [
+          IconButton(
+            onPressed: () async {
+              const number = '18005990019';
+              await FlutterPhoneDirectCaller.callNumber(number);
+            },
+            icon: Icon(Icons.phone, size: 36.0),
+          ),
+          SizedBox(height: 10.0),
           Image.asset("assets/icons/kiran-logo.png"),
+          SizedBox(height: 10.0),
         ],
         iconTheme: IconThemeData(color: Colors.black),
       ),
