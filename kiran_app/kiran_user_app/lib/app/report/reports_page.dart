@@ -38,7 +38,7 @@ class _ReportPageState extends State<ReportPage> {
                 style: ElevatedButton.styleFrom(
                   primary: kPrimaryColor,
                 ),
-                child: Text("Downlaod Report")),
+                child: Text("Download Report")),
       ),
     );
   }
